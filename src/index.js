@@ -1,6 +1,8 @@
+const INTERVAL = 1000;
+
 const refs = {
-  startBtn: document.querySelector('[data-action="start"]'),
-  stopBtn: document.querySelector('[data-action="stop"]'),
+  startBtn: document.querySelector('button[data-action="start"]'),
+  stopBtn: document.querySelector('button[data-action="stop"]'),
   body: document.querySelector('body'),
 }
 
@@ -15,22 +17,22 @@ const colors = [
 
 refs.startBtn.addEventListener('click', startColorChange);
 refs.stopBtn.addEventListener('click', stopColorChange);
+let onBtnClick;
 
-console.log(refs.stopBtn);
+const randomIntegerFromInterval = (min, max) => {
+      return Math.floor(Math.random() * (max - min + 1) + min);
+};
+  
+function startColorChange() {
+  refs.startBtn.disabled = true;
+  onBtnClick = setInterval(() => {
+      const changeColor = randomIntegerFromInterval(1, colors.length);
+      refs.body.style.backgroundColor = colors[changeColor-1];
+  }
+  , INTERVAL);
+};
 
-
-const startColorChange = setInterval(
-    () => {
-        const randomIntegerFromInterval = (min, max) => {
-            return Math.floor(Math.random() * (max - min + 1) + min);
-        };
-        const changeColor = randomIntegerFromInterval(0, colors.length);
-        refs.body.style.backgroundColor = colors[changeColor];
-        refs.startBtn.disabled = true;
-    }
-    , 1000);
-
-const stopColorChange = () => {
-    clearInterval(startColorChange);
-    refs.stopBtn.disabled = false;
+function stopColorChange() {
+    clearInterval(onBtnClick);
+    refs.startBtn.disabled = false;
 };
